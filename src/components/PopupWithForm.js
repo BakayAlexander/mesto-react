@@ -1,43 +1,21 @@
 import React from 'react';
 
-function PopupWithForm(props) {
+function PopupWithForm({ name, title, button, onClose, children, isOpen }) {
   return (
-    <div className={`popup popup_type_${props.name}`}>
+    <div
+      // className={`popup popup_type_${name}`}
+      // className={`popup popup_type_${isOpen ? { name } + 'popup_is-opened' : { name }}`}
+      className={`popup popup_type_${name} ${isOpen ? 'popup_is-opened' : ''}`}
+    >
       <div className="popup__container">
-        <h2 className="popup__title">{props.title}</h2>
-        <form name={`form-${props.name}`} className="popup__form" novalidate>
-          {props.children}
-          {/* <fieldset className="popup__inputs">
-            <input
-              className="popup__input popup__input_type_name"
-              id="type_name"
-              type="text"
-              name="fullname"
-              value=""
-              required
-              minlength="2"
-              maxlength="40"
-              autocomplete="off"
-            />
-            <span className="popup__input-error popup__input-error_type_name"></span>
-            <input
-              className="popup__input popup__input_type_description"
-              id="type_description"
-              type="text"
-              name="description"
-              value=""
-              required
-              minlength="2"
-              maxlength="200"
-              autocomplete="off"
-            />
-            <span className="popup__input-error popup__input-error_type_description"></span>
-          </fieldset> */}
+        <h2 className="popup__title">{title}</h2>
+        <form name={`form-${name}`} className="popup__form" noValidate>
+          {children}
           <button className="popup__button-save" type="submit">
-            {props.button}
+            {button}
           </button>
         </form>
-        <button className="popup__button-close" type="button" aria-label="Закрыть"></button>
+        <button className="popup__button-close" type="button" aria-label="Закрыть" onClick={onClose}></button>
       </div>
     </div>
   );
