@@ -32,7 +32,7 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
             id: item._id,
             name: item.name,
             link: item.link,
-            // onCardClick: onCardClick,
+            likes: item.likes.length,
           }))
         );
       })
