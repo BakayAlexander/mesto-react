@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Footer from './Footer';
 import Header from './Header';
 import ImagePopup from './ImagePopup';
 import Main from './Main';
 import PopupWithForm from './PopupWithForm';
-import Card from './Card';
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
-  // const [selectedCard, ]
+  const [selectedCard, setSelectedCard] = React.useState({});
 
   function handleEditProfileClick() {
     setEditProfilePopupOpen(!isEditProfilePopupOpen);
@@ -24,10 +23,15 @@ function App() {
     setAddPlacePopupOpen(!isAddPlacePopupOpen);
   }
 
+  function handleCardClick(card) {
+    setSelectedCard(card);
+  }
+
   function closeAllPopups() {
     setEditProfilePopupOpen(false);
     setEditAvatarPopupOpen(false);
     setAddPlacePopupOpen(false);
+    setSelectedCard({});
   }
 
   return (
@@ -37,6 +41,7 @@ function App() {
         onEditProfile={handleEditProfileClick}
         onEditAvatar={handleEditAvatarClick}
         onAddPlace={handleAddPlaceClick}
+        onCardClick={handleCardClick}
       />
       <Footer />
       <PopupWithForm
@@ -52,7 +57,7 @@ function App() {
             id="type_name"
             type="text"
             name="fullname"
-            value=""
+            defaultValue=""
             required
             minLength="2"
             maxLength="40"
@@ -64,7 +69,7 @@ function App() {
             id="type_description"
             type="text"
             name="description"
-            value=""
+            defaultValue=""
             required
             minLength="2"
             maxLength="200"
@@ -86,7 +91,7 @@ function App() {
             id="type_image-name"
             type="text"
             name="name"
-            value=""
+            defaultValue=""
             placeholder="Название"
             required
             minLength="2"
@@ -99,7 +104,7 @@ function App() {
             id="type_image-url"
             type="url"
             name="link"
-            value=""
+            defaultValue=""
             placeholder="Ссылка на картинку"
             required
             autoComplete="off"
@@ -121,7 +126,7 @@ function App() {
             type="url"
             placeholder="Ссылка на аватар"
             name="link"
-            value=""
+            defaultValue=""
             required
             minLength="2"
             maxLength="200"
@@ -136,6 +141,7 @@ function App() {
         button="Да"
         onClose={closeAllPopups}
       ></PopupWithForm>
+      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
     </div>
   );
 }

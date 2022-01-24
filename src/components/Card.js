@@ -1,10 +1,13 @@
 import React from 'react';
 
-function Card({ name, link }) {
+function Card({ name, link, onCardClick }) {
+  function handleClick() {
+    //пробрасываем значения в ImagePopup
+    onCardClick({ name, link });
+  }
   return (
-    // <template className="element-template">
     <article className="element">
-      <img className="element__pic" src={link} alt={name} />
+      <img className="element__pic" src={link} alt={name} onClick={handleClick} />
       <div className="element__container">
         <h2 className="element__name">{name}</h2>
         <div className="element__like-container">
@@ -14,7 +17,6 @@ function Card({ name, link }) {
       </div>
       <button className="element__delete-button" type="button" aria-label="Удалить карточку"></button>
     </article>
-    // </template>
   );
 }
 
