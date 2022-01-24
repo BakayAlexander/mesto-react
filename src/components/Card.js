@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Card({ name, link, onCardClick }) {
+function Card({ name, link, likes, onCardClick }) {
   function handleClick() {
     //пробрасываем значения в ImagePopup
     onCardClick({ name, link });
@@ -12,7 +12,7 @@ function Card({ name, link, onCardClick }) {
         <h2 className="element__name">{name}</h2>
         <div className="element__like-container">
           <button className="element__like-button" type="button" aria-label="Отметить понравившимся"></button>
-          <span className="element__like-count"></span>
+          <span className="element__like-count">{likes}</span>
         </div>
       </div>
       <button className="element__delete-button" type="button" aria-label="Удалить карточку"></button>
