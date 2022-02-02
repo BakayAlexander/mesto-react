@@ -93,6 +93,24 @@ export class Api {
       return this._prepareDate(res);
     });
   }
+
+  changeLikeCardStatus(id, condition) {
+    if (condition) {
+      return fetch(`${this._url}cards/${id}/likes`, {
+        method: 'PUT',
+        headers: this._headers,
+      }).then((res) => {
+        return this._prepareDate(res);
+      });
+    } else {
+      return fetch(`${this._url}cards/${id}/likes`, {
+        method: 'DELETE',
+        headers: this._headers,
+      }).then((res) => {
+        return this._prepareDate(res);
+      });
+    }
+  }
 }
 
 const api = new Api({
