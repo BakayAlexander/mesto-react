@@ -6,6 +6,7 @@ import Main from './Main';
 import PopupWithForm from './PopupWithForm';
 import api from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import EditProfilePopup from './EditProfilePopup';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
@@ -59,7 +60,8 @@ function App() {
           onCardClick={handleCardClick}
         />
         <Footer />
-        <PopupWithForm
+        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
+        {/* <PopupWithForm
           name="edit"
           title="Редактировать профиль"
           button="Сохранить"
@@ -94,7 +96,7 @@ function App() {
             />
             <span className="popup__input-error popup__input-error_type_description"></span>
           </fieldset>
-        </PopupWithForm>
+        </PopupWithForm> */}
         <PopupWithForm
           name="card"
           title="Новое место"
