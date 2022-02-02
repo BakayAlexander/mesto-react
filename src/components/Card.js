@@ -19,7 +19,7 @@ function Card({ id, name, link, likes, owner, onCardClick, onCardLike, onCardDel
   }
 
   function handleLikeClick() {
-    onCardLike(likes, id);
+    onCardLike(id, isLiked);
   }
 
   function handleDeleteCard() {

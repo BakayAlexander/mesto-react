@@ -14,15 +14,7 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
     api
       .getCardsData()
       .then((data) => {
-        setCards(
-          data.map((item) => ({
-            id: item._id,
-            name: item.name,
-            link: item.link,
-            likes: item.likes,
-            owner: item.owner,
-          }))
-        );
+        setCards(data);
       })
       .catch((err) => {
         alert(`Возникла ошибка: ${err}`);
@@ -30,16 +22,11 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
   }, []);
 
   //Добавляем ф-ю постановки like на карточки
-  function handleCardLike(likes, id) {
-    //Проверяем стоит ли наш лайк на карточке
-    const isLiked = likes.some((i) => i._id === currentUser._id);
-    console.log(id);
-    console.log(isLiked);
-    //Отправляем запрос в API и получаем обновлённые данные карточки
+  function handleCardLike(id, isLiked) {
     api
       .changeLikeCardStatus(id, !isLiked)
       .then((newCard) => {
-        setCards((state) => state.map((c) => (c.id === id ? newCard : c)));
+        setCards((state) => state.map((card) => (card._id === id ? newCard : card)));
       })
       .catch((err) => {
         alert(`Возникла ошибка: ${err}`);
@@ -52,7 +39,7 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
       api
         .deleteCard(id)
         .then(() => {
-          const arr = cards.filter((card) => card.id !== id);
+          const arr = cards.filter((card) => card._id !== id);
           setCards(arr);
         })
         .catch((err) => {
@@ -101,13 +88,13 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
       </section>
       <section className="elements page__container-elements">
         {/* Сюда добавляем карточки. Нужно пройтись по массиву с карточками, сразу делаем деструктуризацию. Отдельно пробрасываем id, а все остальные пропсы собираем spread-оператором   */}
-        {cards.map(({ id, ...props }) => (
+        {cards.map(({ _id, ...props }) => (
           <Card
             onCardClick={onCardClick}
             onCardLike={handleCardLike}
             onCardDelete={handleCardDelete}
-            key={id}
-            id={id}
+            key={_id}
+            id={_id}
             {...props}
           />
         ))}
