@@ -3,25 +3,12 @@ import editButton from '../images/edit_button.svg';
 import addButton from '../images/add_button.svg';
 import Card from './Card';
 import api from '../utils/api';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
   const [cards, setCards] = React.useState([]);
-  const [userName, setUserName] = React.useState('');
-  const [userDescription, setUserDescription] = React.useState('');
-  const [userAvatar, setUserAvatar] = React.useState('');
-
-  React.useEffect(() => {
-    api
-      .getProfileData()
-      .then((data) => {
-        setUserName(data.name);
-        setUserDescription(data.about);
-        setUserAvatar(data.avatar);
-      })
-      .catch((err) => {
-        alert(`Возникла ошибка: ${err}`);
-      });
-  }, []);
+  //Подписка на контекст текущего пользователя
+  const currentUser = React.useContext(CurrentUserContext);
 
   React.useEffect(() => {
     api
@@ -52,12 +39,12 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
               type="button"
               aria-label="Редактировать"
             >
-              <img src={userAvatar} alt="Фото профиля" className="profile__pic" />
+              <img src={currentUser?.avatar} alt="Фото профиля" className="profile__pic" />
             </button>
           </div>
           <div className="profile__info">
             <div className="profile__name-container">
-              <h1 className="profile__name">{userName}</h1>
+              <h1 className="profile__name">{currentUser?.name}</h1>
               <button
                 className="profile__edit-button"
                 onClick={onEditProfile}
@@ -67,7 +54,7 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
                 <img src={editButton} alt="Кнопка Редактировать" className="profile__edit-pic" />
               </button>
             </div>
-            <p className="profile__description">{userDescription}</p>
+            <p className="profile__description">{currentUser?.about}</p>
           </div>
         </div>
         <button
