@@ -19,7 +19,8 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
             id: item._id,
             name: item.name,
             link: item.link,
-            likes: item.likes.length,
+            likes: item.likes,
+            owner: item.owner,
           }))
         );
       })
@@ -39,12 +40,12 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
               type="button"
               aria-label="Редактировать"
             >
-              <img src={currentUser?.avatar} alt="Фото профиля" className="profile__pic" />
+              <img src={currentUser?.avatar || ' '} alt="Фото профиля" className="profile__pic" />
             </button>
           </div>
           <div className="profile__info">
             <div className="profile__name-container">
-              <h1 className="profile__name">{currentUser?.name}</h1>
+              <h1 className="profile__name">{currentUser?.name || '... getting data'}</h1>
               <button
                 className="profile__edit-button"
                 onClick={onEditProfile}
@@ -54,7 +55,7 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
                 <img src={editButton} alt="Кнопка Редактировать" className="profile__edit-pic" />
               </button>
             </div>
-            <p className="profile__description">{currentUser?.about}</p>
+            <p className="profile__description">{currentUser?.about || '... getting data'}</p>
           </div>
         </div>
         <button

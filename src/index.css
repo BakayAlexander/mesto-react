@@ -35,6 +35,7 @@
 @import url('../src/blocks/element/__like-container/element__like-container.css');
 @import url('../src/blocks/element/__like-count/element__like-count.css');
 @import url('../src/blocks/element/__delete-button/element__delete-button.css');
+@import url('../src/blocks/element/__delete-button/_hidden/element__delete-button_hidden.css');
 
 @import url('../src/blocks/footer/footer.css');
 @import url('../src/blocks/footer/__content/footer__content.css');
