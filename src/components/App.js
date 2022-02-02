@@ -61,42 +61,6 @@ function App() {
         />
         <Footer />
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
-        {/* <PopupWithForm
-          name="edit"
-          title="Редактировать профиль"
-          button="Сохранить"
-          onClose={closeAllPopups}
-          isOpen={isEditProfilePopupOpen}
-        >
-          <fieldset className="popup__inputs">
-            <input
-              className="popup__input popup__input_type_name"
-              id="type_name"
-              type="text"
-              placeholder="Имя"
-              name="fullname"
-              defaultValue=""
-              required
-              minLength="2"
-              maxLength="40"
-              autoComplete="off"
-            />
-            <span className="popup__input-error popup__input-error_type_name"></span>
-            <input
-              className="popup__input popup__input_type_description"
-              id="type_description"
-              type="text"
-              placeholder="Занятие"
-              name="description"
-              defaultValue=""
-              required
-              minLength="2"
-              maxLength="200"
-              autoComplete="off"
-            />
-            <span className="popup__input-error popup__input-error_type_description"></span>
-          </fieldset>
-        </PopupWithForm> */}
         <PopupWithForm
           name="card"
           title="Новое место"
