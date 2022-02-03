@@ -2,7 +2,7 @@ import React from 'react';
 import PopupWithForm from './PopupWithForm';
 
 function EditAvatarPopup(props) {
-  const [avatar, setAvatar] = React.useState();
+  const [avatar, setAvatar] = React.useState('');
   //Для получения доступа к input используем хук и получаем ref
   const inputRef = React.useRef({});
 
@@ -16,6 +16,12 @@ function EditAvatarPopup(props) {
       avatar: inputRef.current.value,
     });
   }
+
+  //Очищаем значени input в зависимости от открытия popup
+  React.useEffect(() => {
+    setAvatar('');
+  }, [props.isOpen]);
+
   return (
     <PopupWithForm
       name="avatar"

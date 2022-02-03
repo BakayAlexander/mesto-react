@@ -5,8 +5,8 @@ import PopupWithForm from './PopupWithForm';
 function EditProfilePopup(props) {
   const currentUser = React.useContext(CurrentUserContext);
 
-  const [name, setName] = React.useState();
-  const [description, setDescription] = React.useState();
+  const [name, setName] = React.useState('');
+  const [description, setDescription] = React.useState('');
 
   function handleChangeName(e) {
     setName(e.target.value);
@@ -28,6 +28,12 @@ function EditProfilePopup(props) {
     setName(currentUser.name);
     setDescription(currentUser.about);
   }, [currentUser]);
+
+  //Также посдтавляем данные в случае если пользователь закрыл попап не сохранив изменения
+  React.useEffect(() => {
+    setName(currentUser.name);
+    setDescription(currentUser.about);
+  }, [props.isOpen]);
 
   return (
     <PopupWithForm
