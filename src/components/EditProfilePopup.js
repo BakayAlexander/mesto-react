@@ -23,17 +23,11 @@ function EditProfilePopup(props) {
       about: description,
     });
   }
-  // Чтобы подставить текущией данные с api в форму используем хук useEffect, и подставим контекст
+  // Чтобы подставить текущией данные с api в форму используем хук useEffect, и подставим контекст.Также посдтавляем данные в случае если пользователь закрыл попап не сохранив изменения.
   React.useEffect(() => {
     setName(currentUser.name);
     setDescription(currentUser.about);
-  }, [currentUser]);
-
-  //Также посдтавляем данные в случае если пользователь закрыл попап не сохранив изменения
-  React.useEffect(() => {
-    setName(currentUser.name);
-    setDescription(currentUser.about);
-  }, [props.isOpen]);
+  }, [currentUser, props.isOpen]);
 
   return (
     <PopupWithForm
