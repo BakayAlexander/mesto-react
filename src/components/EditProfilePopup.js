@@ -49,7 +49,7 @@ function EditProfilePopup(props) {
           maxLength="40"
           autoComplete="off"
           //Прописываем выбор или, чтобы в консоль не падало предупреждение о ошибке
-          value={name || ''}
+          value={name ?? ''}
           onChange={handleChangeName}
         />
         <span className="popup__input-error popup__input-error_type_name"></span>
@@ -63,7 +63,7 @@ function EditProfilePopup(props) {
           maxLength="200"
           autoComplete="off"
           //Прописываем выбор или, чтобы в консоль не падало предупреждение о ошибке
-          value={description || ''}
+          value={description ?? ''}
           onChange={handleChangeDescription}
         />
         <span className="popup__input-error popup__input-error_type_description"></span>

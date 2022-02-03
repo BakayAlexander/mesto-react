@@ -39,7 +39,7 @@ function EditAvatarPopup(props) {
           ref={inputRef}
           onChange={handleChangeAvatar}
           //Прописываем выбор или, чтобы в консоль не падало предупреждение о ошибке
-          value={avatar || ''}
+          value={avatar ?? ''}
         />
         <span className="popup__input-error popup__input-error_type_avatar"></span>
       </fieldset>

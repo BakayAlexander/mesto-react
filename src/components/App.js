@@ -75,6 +75,48 @@ function App() {
       });
   }
 
+  //Большой блок работы с карточками. Тут используем технику поднятия стейта, чтобы прокинуть все в нижестоящие компоненты
+
+  const [cards, setCards] = React.useState([]);
+
+  React.useEffect(() => {
+    api
+      .getCardsData()
+      .then((data) => {
+        setCards(data);
+      })
+      .catch((err) => {
+        alert(`Возникла ошибка: ${err}`);
+      });
+  }, []);
+
+  //Добавляем ф-ю постановки like на карточки
+  function handleCardLike(id, isLiked) {
+    api
+      .changeLikeCardStatus(id, !isLiked)
+      .then((newCard) => {
+        setCards((state) => state.map((card) => (card._id === id ? newCard : card)));
+      })
+      .catch((err) => {
+        alert(`Возникла ошибка: ${err}`);
+      });
+  }
+
+  //Добавляем ф-ю удаления собственных карточек
+  function handleCardDelete(isOwn, id) {
+    if (isOwn) {
+      api
+        .deleteCard(id)
+        .then(() => {
+          const arr = cards.filter((card) => card._id !== id);
+          setCards(arr);
+        })
+        .catch((err) => {
+          alert(`Возникла ошибка: ${err}`);
+        });
+    }
+  }
+
   return (
     <div className="page__container-global">
       <CurrentUserContext.Provider value={currentUser}>
@@ -84,6 +126,9 @@ function App() {
           onEditAvatar={handleEditAvatarClick}
           onAddPlace={handleAddPlaceClick}
           onCardClick={handleCardClick}
+          cards={cards}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
         />
         <Footer />
         <EditProfilePopup

@@ -2,51 +2,13 @@ import React from 'react';
 import editButton from '../images/edit_button.svg';
 import addButton from '../images/add_button.svg';
 import Card from './Card';
-import api from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
-  const [cards, setCards] = React.useState([]);
+//Эти значения мы прокидываем из App, если мы не деструктурируем, то при прокидывании дальше через props. допустим в Card полетят undefined. Деструктурировать обязательно.
+function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick, onCardLike, onCardDelete, ...props }) {
   //Подписка на контекст текущего пользователя
   const currentUser = React.useContext(CurrentUserContext);
-
-  React.useEffect(() => {
-    api
-      .getCardsData()
-      .then((data) => {
-        setCards(data);
-      })
-      .catch((err) => {
-        alert(`Возникла ошибка: ${err}`);
-      });
-  }, []);
-
-  //Добавляем ф-ю постановки like на карточки
-  function handleCardLike(id, isLiked) {
-    api
-      .changeLikeCardStatus(id, !isLiked)
-      .then((newCard) => {
-        setCards((state) => state.map((card) => (card._id === id ? newCard : card)));
-      })
-      .catch((err) => {
-        alert(`Возникла ошибка: ${err}`);
-      });
-  }
-
-  //Добавляем ф-ю удаления собственных карточек
-  function handleCardDelete(isOwn, id) {
-    if (isOwn) {
-      api
-        .deleteCard(id)
-        .then(() => {
-          const arr = cards.filter((card) => card._id !== id);
-          setCards(arr);
-        })
-        .catch((err) => {
-          alert(`Возникла ошибка: ${err}`);
-        });
-    }
-  }
+  // console.log(props.onCardLike);
 
   return (
     <main className="content">
@@ -59,7 +21,13 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
               type="button"
               aria-label="Редактировать"
             >
-              <img src={currentUser?.avatar ?? ' '} alt="Фото профиля" className="profile__pic" />
+              <img
+                src={
+                  currentUser?.avatar ?? 'https://anatomised.com/wp-content/uploads/2016/05/spinner-test4.gif'
+                }
+                alt="Фото профиля"
+                className="profile__pic"
+              />
             </button>
           </div>
           <div className="profile__info">
@@ -88,11 +56,11 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
       </section>
       <section className="elements page__container-elements">
         {/* Сюда добавляем карточки. Нужно пройтись по массиву с карточками, сразу делаем деструктуризацию. Отдельно пробрасываем id, а все остальные пропсы собираем spread-оператором   */}
-        {cards.map(({ _id, ...props }) => (
+        {props.cards.map(({ _id, ...props }) => (
           <Card
             onCardClick={onCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
+            onCardLike={onCardLike}
+            onCardDelete={onCardDelete}
             key={_id}
             id={_id}
             {...props}
