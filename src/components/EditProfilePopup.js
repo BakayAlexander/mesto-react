@@ -10,13 +10,20 @@ function EditProfilePopup(props) {
 
   function handleChangeName(e) {
     setName(e.target.value);
-    console.log(name);
   }
 
   function handleChangeDescription(e) {
     setDescription(e.target.value);
   }
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    props.onUpdateUser({
+      name,
+      about: description,
+    });
+  }
+  // Чтобы подставить данные в форму используем хук useEffect, и подставим контекст
   React.useEffect(() => {
     setName(currentUser.name);
     setDescription(currentUser.about);
@@ -29,6 +36,7 @@ function EditProfilePopup(props) {
       button="Сохранить"
       onClose={props.onClose}
       isOpen={props.isOpen}
+      onSubmit={handleSubmit}
     >
       <fieldset className="popup__inputs">
         <input
@@ -40,7 +48,7 @@ function EditProfilePopup(props) {
           minLength="2"
           maxLength="40"
           autoComplete="off"
-          value={name || 'Имя'}
+          value={name || ''}
           onChange={handleChangeName}
         />
         <span className="popup__input-error popup__input-error_type_name"></span>
@@ -53,7 +61,7 @@ function EditProfilePopup(props) {
           minLength="2"
           maxLength="200"
           autoComplete="off"
-          value={description || 'Описание'}
+          value={description || ''}
           onChange={handleChangeDescription}
         />
         <span className="popup__input-error popup__input-error_type_description"></span>

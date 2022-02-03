@@ -49,6 +49,19 @@ function App() {
     setSelectedCard({});
   }
 
+  //Ф-я принимает на вход объект с данными и на основе них отправляет PATCH запрос к api. Объявляем ее тут, а потом передаем в EditProfilePopup прокидывая через пропс. Затем из EditProfilePopup прокидываем ее в PopupWithForm, чтобы все запускалось при сабмите формы.
+  function handleUpdateUser({ name, about }) {
+    api
+      .editProfile(name, about)
+      .then((data) => {
+        setCurrentUser(data);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        alert(`Возникла ошибка: ${err}`);
+      });
+  }
+
   return (
     <div className="page__container-global">
       <CurrentUserContext.Provider value={currentUser}>
@@ -60,7 +73,11 @@ function App() {
           onCardClick={handleCardClick}
         />
         <Footer />
-        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+        />
         <PopupWithForm
           name="card"
           title="Новое место"
