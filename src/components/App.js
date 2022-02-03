@@ -3,18 +3,20 @@ import Footer from './Footer';
 import Header from './Header';
 import ImagePopup from './ImagePopup';
 import Main from './Main';
-import PopupWithForm from './PopupWithForm';
 import api from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import DeleteCardPopup from './DeleteCardPopup';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
+  const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
+  const [deleteCardId, setDeleteCardId] = React.useState();
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
 
@@ -43,6 +45,7 @@ function App() {
 
   function handleCardClick(card) {
     setSelectedCard(card);
+    console.log(card);
   }
 
   function closeAllPopups() {
@@ -50,6 +53,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setSelectedCard({});
+    setIsDeleteCardPopupOpen(false);
   }
 
   //Ф-я принимает на вход объект с данными и на основе них отправляет PATCH запрос к api. Объявляем ее тут, а потом передаем в EditProfilePopup прокидывая через пропс. Затем из EditProfilePopup прокидываем ее в PopupWithForm, чтобы все запускалось при сабмите формы.
@@ -102,21 +106,6 @@ function App() {
       });
   }
 
-  //Добавляем ф-ю удаления собственных карточек
-  function handleCardDelete(isOwn, id) {
-    if (isOwn) {
-      api
-        .deleteCard(id)
-        .then(() => {
-          const arr = cards.filter((card) => card._id !== id);
-          setCards(arr);
-        })
-        .catch((err) => {
-          alert(`Возникла ошибка: ${err}`);
-        });
-    }
-  }
-
   //Ф-я добавления новой карточки
   function handleAddPlaceSubmit({ name, link }) {
     api
@@ -131,6 +120,26 @@ function App() {
       });
   }
 
+  //Добавляем ф-ю удаления собственных карточек, ее прокидываем в DeleteCardPopup. В качестве id будем использовать стейт-переменную deleteCardId, которую прокидываем в тот же компонент.
+  function handleCardDelete(id) {
+    api
+      .deleteCard(id)
+      .then(() => {
+        const arr = cards.filter((card) => card._id !== id);
+        setCards(arr);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        alert(`Возникла ошибка: ${err}`);
+      });
+  }
+
+  //Работаем c popup удаления карточек. Вначале устанавливаем стейт для открытия DeleteCardPopup. Потом меняем значение стейт-переменной deleteCardId. Все это передаем в компонент Main, где прокинем дальше в компонент Card.
+  function handleDeleteCardClick(cardId) {
+    setIsDeleteCardPopupOpen(!isDeleteCardPopupOpen);
+    setDeleteCardId(cardId);
+  }
+
   return (
     <div className="page__container-global">
       {/* Подписываем компоненты на контекст текущего пользователя */}
@@ -143,7 +152,7 @@ function App() {
           onCardClick={handleCardClick}
           cards={cards}
           onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
+          onCardDelete={handleDeleteCardClick}
         />
         <Footer />
         <EditProfilePopup
@@ -161,12 +170,13 @@ function App() {
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
         />
-        <PopupWithForm
-          name="card-delete"
-          title="Вы уверены?"
-          button="Да"
+        <DeleteCardPopup
+          isOpen={isDeleteCardPopupOpen}
           onClose={closeAllPopups}
-        ></PopupWithForm>
+          onDeleteCard={handleCardDelete}
+          //Используем стейт, чтобы передать id удаляемой карточки
+          cardId={deleteCardId}
+        />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       </CurrentUserContext.Provider>
     </div>
