@@ -17,4 +17,4 @@
 Необходимо прописать серверную часть проекта
 
 **Ссылка на GitHub Pages**
-Мой сайт размещен по ссылке https://bakayalexander.github.io/react-mesto/
+Мой сайт размещен по ссылке https://bakayalexander.github.io/mesto-react/
