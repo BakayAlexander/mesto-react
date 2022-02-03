@@ -8,6 +8,7 @@ import api from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
@@ -15,6 +16,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
+  const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
     api
@@ -77,8 +79,6 @@ function App() {
 
   //Большой блок работы с карточками. Тут используем технику поднятия стейта, чтобы прокинуть все в нижестоящие компоненты
 
-  const [cards, setCards] = React.useState([]);
-
   React.useEffect(() => {
     api
       .getCardsData()
@@ -117,8 +117,23 @@ function App() {
     }
   }
 
+  //Ф-я добавления новой карточки
+  function handleAddPlaceSubmit({ name, link }) {
+    api
+      .addNewCard(name, link)
+      //обновляем стейт с помощью расширеной копии существуещего массива стейта, используем для этого spread-оператор
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        alert(`Возникла ошибка: ${err}`);
+      });
+  }
+
   return (
     <div className="page__container-global">
+      {/* Подписываем компоненты на контекст текущего пользователя */}
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
         <Main
@@ -136,40 +151,11 @@ function App() {
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
         />
-        <PopupWithForm
-          name="card"
-          title="Новое место"
-          button="Создать"
-          onClose={closeAllPopups}
+        <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
-        >
-          <fieldset className="popup__inputs">
-            <input
-              className="popup__input popup__input_type_image-name"
-              id="type_image-name"
-              type="text"
-              name="name"
-              defaultValue=""
-              placeholder="Название"
-              required
-              minLength="2"
-              maxLength="30"
-              autoComplete="off"
-            />
-            <span className=" popup__input-error popup__input-error_type_image-name"></span>
-            <input
-              className="popup__input popup__input_type_image-url"
-              id="type_image-url"
-              type="url"
-              name="link"
-              defaultValue=""
-              placeholder="Ссылка на картинку"
-              required
-              autoComplete="off"
-            />
-            <span className="popup__input-error popup__input-error_type_image-url"></span>
-          </fieldset>
-        </PopupWithForm>
+          onClose={closeAllPopups}
+          onAddPlace={handleAddPlaceSubmit}
+        />
         <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}

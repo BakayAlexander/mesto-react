@@ -1,8 +1,8 @@
 import React from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-function Card({ id, name, link, likes, owner, onCardClick, onCardLike, onCardDelete, ...props }) {
-  //Подписываем на контекст
+function Card({ id, name, link, likes, owner, onCardClick, onCardLike, onCardDelete }) {
+  //Подписываем на контекст текущего пользователя
   const currentUser = React.useContext(CurrentUserContext);
 
   //Достаем id пользователя создавшего карточку, используем это для идентификации своих и чужих карточек/лайков

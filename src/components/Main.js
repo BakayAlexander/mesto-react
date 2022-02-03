@@ -4,7 +4,7 @@ import addButton from '../images/add_button.svg';
 import Card from './Card';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-//Эти значения мы прокидываем из App, если мы не деструктурируем, то при прокидывании дальше через props. допустим в Card полетят undefined. Деструктурировать обязательно.
+//Эти значения мы прокидываем из App, если мы не деструктурируем, то при прокидывании дальше через props. допустим в Card полетят undefined. Деструктурировать обязательно. ...props в конце добавляем для того чтобы не потерять оставшиеся вне деструктуризации пропсы
 function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick, onCardLike, onCardDelete, ...props }) {
   //Подписка на контекст текущего пользователя
   const currentUser = React.useContext(CurrentUserContext);

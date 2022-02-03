@@ -23,7 +23,7 @@ function EditProfilePopup(props) {
       about: description,
     });
   }
-  // Чтобы подставить данные в форму используем хук useEffect, и подставим контекст
+  // Чтобы подставить текущией данные с api в форму используем хук useEffect, и подставим контекст
   React.useEffect(() => {
     setName(currentUser.name);
     setDescription(currentUser.about);
@@ -48,7 +48,7 @@ function EditProfilePopup(props) {
           minLength="2"
           maxLength="40"
           autoComplete="off"
-          //Прописываем выбор или, чтобы в консоль не падало предупреждение о ошибке
+          //Прописываем выбор, чтобы в консоль не падало предупреждение о ошибке
           value={name ?? ''}
           onChange={handleChangeName}
         />
@@ -62,7 +62,7 @@ function EditProfilePopup(props) {
           minLength="2"
           maxLength="200"
           autoComplete="off"
-          //Прописываем выбор или, чтобы в консоль не падало предупреждение о ошибке
+          //Прописываем выбор, чтобы в консоль не падало предупреждение о ошибке
           value={description ?? ''}
           onChange={handleChangeDescription}
         />

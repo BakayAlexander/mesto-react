@@ -3,7 +3,7 @@ import PopupWithForm from './PopupWithForm';
 
 function EditAvatarPopup(props) {
   const [avatar, setAvatar] = React.useState();
-  //Для получения доступа к input используем хук
+  //Для получения доступа к input используем хук и получаем ref
   const inputRef = React.useRef({});
 
   function handleChangeAvatar(e) {
@@ -36,9 +36,10 @@ function EditAvatarPopup(props) {
           minLength="2"
           maxLength="200"
           autoComplete="off"
+          //Подписываем ref и получаем прямой доступ к этому элементу, чтобы вытащить значение
           ref={inputRef}
           onChange={handleChangeAvatar}
-          //Прописываем выбор или, чтобы в консоль не падало предупреждение о ошибке
+          //Прописываем выбор, чтобы в консоль не падало предупреждение о ошибке
           value={avatar ?? ''}
         />
         <span className="popup__input-error popup__input-error_type_avatar"></span>
