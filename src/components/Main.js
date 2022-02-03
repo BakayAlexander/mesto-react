@@ -2,44 +2,13 @@ import React from 'react';
 import editButton from '../images/edit_button.svg';
 import addButton from '../images/add_button.svg';
 import Card from './Card';
-import api from '../utils/api';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
-  const [cards, setCards] = React.useState([]);
-  const [userName, setUserName] = React.useState('');
-  const [userDescription, setUserDescription] = React.useState('');
-  const [userAvatar, setUserAvatar] = React.useState('');
-
-  React.useEffect(() => {
-    api
-      .getProfileData()
-      .then((data) => {
-        setUserName(data.name);
-        setUserDescription(data.about);
-        setUserAvatar(data.avatar);
-      })
-      .catch((err) => {
-        alert(`Возникла ошибка: ${err}`);
-      });
-  }, []);
-
-  React.useEffect(() => {
-    api
-      .getCardsData()
-      .then((data) => {
-        setCards(
-          data.map((item) => ({
-            id: item._id,
-            name: item.name,
-            link: item.link,
-            likes: item.likes.length,
-          }))
-        );
-      })
-      .catch((err) => {
-        alert(`Возникла ошибка: ${err}`);
-      });
-  }, []);
+//Эти значения мы прокидываем из App, если мы не деструктурируем, то при прокидывании дальше через props. допустим в Card полетят undefined. Деструктурировать обязательно. ...props в конце добавляем для того чтобы не потерять оставшиеся вне деструктуризации пропсы
+function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick, onCardLike, onCardDelete, ...props }) {
+  //Подписка на контекст текущего пользователя
+  const currentUser = React.useContext(CurrentUserContext);
+  // console.log(props.onCardLike);
 
   return (
     <main className="content">
@@ -52,12 +21,18 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
               type="button"
               aria-label="Редактировать"
             >
-              <img src={userAvatar} alt="Фото профиля" className="profile__pic" />
+              <img
+                src={
+                  currentUser?.avatar ?? 'https://anatomised.com/wp-content/uploads/2016/05/spinner-test4.gif'
+                }
+                alt="Фото профиля"
+                className="profile__pic"
+              />
             </button>
           </div>
           <div className="profile__info">
             <div className="profile__name-container">
-              <h1 className="profile__name">{userName}</h1>
+              <h1 className="profile__name">{currentUser?.name ?? '... getting data'}</h1>
               <button
                 className="profile__edit-button"
                 onClick={onEditProfile}
@@ -67,7 +42,7 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
                 <img src={editButton} alt="Кнопка Редактировать" className="profile__edit-pic" />
               </button>
             </div>
-            <p className="profile__description">{userDescription}</p>
+            <p className="profile__description">{currentUser?.about ?? '... getting data'}</p>
           </div>
         </div>
         <button
@@ -81,8 +56,15 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick }) {
       </section>
       <section className="elements page__container-elements">
         {/* Сюда добавляем карточки. Нужно пройтись по массиву с карточками, сразу делаем деструктуризацию. Отдельно пробрасываем id, а все остальные пропсы собираем spread-оператором   */}
-        {cards.map(({ id, ...props }) => (
-          <Card onCardClick={onCardClick} key={id} {...props} />
+        {props.cards.map(({ _id, ...props }) => (
+          <Card
+            onCardClick={onCardClick}
+            onCardLike={onCardLike}
+            onCardDelete={onCardDelete}
+            key={_id}
+            id={_id}
+            {...props}
+          />
         ))}
       </section>
     </main>
