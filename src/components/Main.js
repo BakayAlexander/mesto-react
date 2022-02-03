@@ -8,7 +8,6 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick, onCardLike, onCardDelete, ...props }) {
   //Подписка на контекст текущего пользователя
   const currentUser = React.useContext(CurrentUserContext);
-  // console.log(props.onCardLike);
 
   return (
     <main className="content">
