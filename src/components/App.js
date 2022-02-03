@@ -7,6 +7,7 @@ import PopupWithForm from './PopupWithForm';
 import api from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
@@ -62,6 +63,18 @@ function App() {
       });
   }
 
+  function handleUpdateAvatar({ avatar }) {
+    api
+      .editAvatar(avatar)
+      .then((data) => {
+        setCurrentUser(data);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        alert(`Возникла ошибка: ${err}`);
+      });
+  }
+
   return (
     <div className="page__container-global">
       <CurrentUserContext.Provider value={currentUser}>
@@ -98,7 +111,7 @@ function App() {
               maxLength="30"
               autoComplete="off"
             />
-            <span className="popup__input-error popup__input-error_type_image-name"></span>
+            <span className=" popup__input-error popup__input-error_type_image-name"></span>
             <input
               className="popup__input popup__input_type_image-url"
               id="type_image-url"
@@ -112,29 +125,11 @@ function App() {
             <span className="popup__input-error popup__input-error_type_image-url"></span>
           </fieldset>
         </PopupWithForm>
-        <PopupWithForm
-          name="avatar"
-          title="Обновить аватар"
-          button="Сохранить"
-          onClose={closeAllPopups}
+        <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
-        >
-          <fieldset className="popup__inputs">
-            <input
-              className="popup__input popup__input_type_avatar"
-              id="type_avatar"
-              type="url"
-              placeholder="Ссылка на аватар"
-              name="link"
-              defaultValue=""
-              required
-              minLength="2"
-              maxLength="200"
-              autoComplete="off"
-            />
-            <span className="popup__input-error popup__input-error_type_avatar"></span>
-          </fieldset>
-        </PopupWithForm>
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
+        />
         <PopupWithForm
           name="card-delete"
           title="Вы уверены?"

@@ -48,6 +48,7 @@ function EditProfilePopup(props) {
           minLength="2"
           maxLength="40"
           autoComplete="off"
+          //Прописываем выбор или, чтобы в консоль не падало предупреждение о ошибке
           value={name || ''}
           onChange={handleChangeName}
         />
@@ -61,6 +62,7 @@ function EditProfilePopup(props) {
           minLength="2"
           maxLength="200"
           autoComplete="off"
+          //Прописываем выбор или, чтобы в консоль не падало предупреждение о ошибке
           value={description || ''}
           onChange={handleChangeDescription}
         />
