@@ -58,3 +58,5 @@
 @import url('../src/blocks/popup/__title-pic/popup__title-pic.css');
 @import url('../src/blocks/popup/__input/_type/popup__input_type_error.css');
 @import url('../src/blocks/popup/__input-error/_activate/popup__input-error_activate.css');
+
+@import url('../src/blocks/loader/loader.css');

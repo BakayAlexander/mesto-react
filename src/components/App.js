@@ -9,6 +9,7 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import DeleteCardPopup from './DeleteCardPopup';
+import BouncingLoader from '../utils/BouncingLoader';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
@@ -145,6 +146,7 @@ function App() {
       {/* Подписываем компоненты на контекст текущего пользователя */}
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
+        <BouncingLoader />
         <Main
           onEditProfile={handleEditProfileClick}
           onEditAvatar={handleEditAvatarClick}
