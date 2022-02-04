@@ -32,6 +32,7 @@ function AddPlacePopup(props) {
       onClose={props.onClose}
       isOpen={props.isOpen}
       onSubmit={handleSubmit}
+      isSubmitting={props.isSubmitting}
     >
       <fieldset className="popup__inputs">
         <input
