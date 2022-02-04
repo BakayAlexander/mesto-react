@@ -16,10 +16,13 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = React.useState(false);
+  const [isRendering, setIsRendering] = React.useState(true);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [deleteCardId, setDeleteCardId] = React.useState();
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
+
+  // console.log(isRendering);
 
   React.useEffect(() => {
     api
@@ -90,6 +93,9 @@ function App() {
       .then((data) => {
         setCards(data);
       })
+      .then(() => {
+        setIsRendering(false);
+      })
       .catch((err) => {
         alert(`Возникла ошибка: ${err}`);
       });
@@ -146,8 +152,20 @@ function App() {
       {/* Подписываем компоненты на контекст текущего пользователя */}
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
-        <BouncingLoader />
-        <Main
+        {isRendering ? (
+          <BouncingLoader />
+        ) : (
+          <Main
+            onEditProfile={handleEditProfileClick}
+            onEditAvatar={handleEditAvatarClick}
+            onAddPlace={handleAddPlaceClick}
+            onCardClick={handleCardClick}
+            cards={cards}
+            onCardLike={handleCardLike}
+            onCardDelete={handleDeleteCardClick}
+          />
+        )}
+        {/* <Main
           onEditProfile={handleEditProfileClick}
           onEditAvatar={handleEditAvatarClick}
           onAddPlace={handleAddPlaceClick}
@@ -155,7 +173,7 @@ function App() {
           cards={cards}
           onCardLike={handleCardLike}
           onCardDelete={handleDeleteCardClick}
-        />
+        /> */}
         <Footer />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
