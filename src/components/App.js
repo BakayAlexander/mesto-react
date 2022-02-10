@@ -19,6 +19,7 @@ function App() {
   const [isRendering, setIsRendering] = React.useState(true);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
+  const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
   const [deleteCardId, setDeleteCardId] = React.useState();
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
@@ -48,6 +49,7 @@ function App() {
 
   function handleCardClick(card) {
     setSelectedCard(card);
+    setIsImagePopupOpen(true);
   }
 
   function closeAllPopups() {
@@ -55,6 +57,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setSelectedCard({});
+    setIsImagePopupOpen(false);
     setIsDeleteCardPopupOpen(false);
   }
 
@@ -198,7 +201,7 @@ function App() {
           cardId={deleteCardId}
           isSubmitting={isSubmitting}
         />
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        <ImagePopup card={selectedCard} onClose={closeAllPopups} isOpen={isImagePopupOpen} />
       </CurrentUserContext.Provider>
     </div>
   );
