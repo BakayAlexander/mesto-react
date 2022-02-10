@@ -41,7 +41,7 @@ function Main({ onEditProfile, onEditAvatar, onAddPlace, onCardClick, onCardLike
                 <img src={editButton} alt="Кнопка Редактировать" className="profile__edit-pic" />
               </button>
             </div>
-            <p className="profile__description">{currentUser?.about ?? '... getting data'}</p>
+            <p className="profile__description">{currentUser?.about ?? ''}</p>
           </div>
         </div>
         <button

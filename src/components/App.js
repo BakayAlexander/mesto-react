@@ -9,13 +9,17 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import DeleteCardPopup from './DeleteCardPopup';
+import BouncingLoader from '../utils/BouncingLoader';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = React.useState(false);
+  const [isRendering, setIsRendering] = React.useState(true);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
+  const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
   const [deleteCardId, setDeleteCardId] = React.useState();
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
@@ -45,7 +49,7 @@ function App() {
 
   function handleCardClick(card) {
     setSelectedCard(card);
-    console.log(card);
+    setIsImagePopupOpen(true);
   }
 
   function closeAllPopups() {
@@ -53,16 +57,19 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setSelectedCard({});
+    setIsImagePopupOpen(false);
     setIsDeleteCardPopupOpen(false);
   }
 
   //Ф-я принимает на вход объект с данными и на основе них отправляет PATCH запрос к api. Объявляем ее тут, а потом передаем в EditProfilePopup прокидывая через пропс. Затем из EditProfilePopup прокидываем ее в PopupWithForm, чтобы все запускалось при сабмите формы.
   function handleUpdateUser({ name, about }) {
+    setIsSubmitting(true);
     api
       .editProfile(name, about)
       .then((data) => {
         setCurrentUser(data);
         closeAllPopups();
+        setIsSubmitting(false);
       })
       .catch((err) => {
         alert(`Возникла ошибка: ${err}`);
@@ -70,11 +77,13 @@ function App() {
   }
 
   function handleUpdateAvatar({ avatar }) {
+    setIsSubmitting(true);
     api
       .editAvatar(avatar)
       .then((data) => {
         setCurrentUser(data);
         closeAllPopups();
+        setIsSubmitting(false);
       })
       .catch((err) => {
         alert(`Возникла ошибка: ${err}`);
@@ -88,6 +97,9 @@ function App() {
       .getCardsData()
       .then((data) => {
         setCards(data);
+      })
+      .then(() => {
+        setIsRendering(false);
       })
       .catch((err) => {
         alert(`Возникла ошибка: ${err}`);
@@ -108,12 +120,14 @@ function App() {
 
   //Ф-я добавления новой карточки
   function handleAddPlaceSubmit({ name, link }) {
+    setIsSubmitting(true);
     api
       .addNewCard(name, link)
       //обновляем стейт с помощью расширеной копии существуещего массива стейта, используем для этого spread-оператор
       .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();
+        setIsSubmitting(false);
       })
       .catch((err) => {
         alert(`Возникла ошибка: ${err}`);
@@ -122,12 +136,14 @@ function App() {
 
   //Добавляем ф-ю удаления собственных карточек, ее прокидываем в DeleteCardPopup. В качестве id будем использовать стейт-переменную deleteCardId, которую прокидываем в тот же компонент.
   function handleCardDelete(id) {
+    setIsSubmitting(true);
     api
       .deleteCard(id)
       .then(() => {
         const arr = cards.filter((card) => card._id !== id);
         setCards(arr);
         closeAllPopups();
+        setIsSubmitting(false);
       })
       .catch((err) => {
         alert(`Возникла ошибка: ${err}`);
@@ -145,30 +161,37 @@ function App() {
       {/* Подписываем компоненты на контекст текущего пользователя */}
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
-        <Main
-          onEditProfile={handleEditProfileClick}
-          onEditAvatar={handleEditAvatarClick}
-          onAddPlace={handleAddPlaceClick}
-          onCardClick={handleCardClick}
-          cards={cards}
-          onCardLike={handleCardLike}
-          onCardDelete={handleDeleteCardClick}
-        />
+        {isRendering ? (
+          <BouncingLoader />
+        ) : (
+          <Main
+            onEditProfile={handleEditProfileClick}
+            onEditAvatar={handleEditAvatarClick}
+            onAddPlace={handleAddPlaceClick}
+            onCardClick={handleCardClick}
+            cards={cards}
+            onCardLike={handleCardLike}
+            onCardDelete={handleDeleteCardClick}
+          />
+        )}
         <Footer />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
+          isSubmitting={isSubmitting}
         />
         <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
           onAddPlace={handleAddPlaceSubmit}
+          isSubmitting={isSubmitting}
         />
         <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
+          isSubmitting={isSubmitting}
         />
         <DeleteCardPopup
           isOpen={isDeleteCardPopupOpen}
@@ -176,8 +199,9 @@ function App() {
           onDeleteCard={handleCardDelete}
           //Используем стейт, чтобы передать id удаляемой карточки
           cardId={deleteCardId}
+          isSubmitting={isSubmitting}
         />
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        <ImagePopup card={selectedCard} onClose={closeAllPopups} isOpen={isImagePopupOpen} />
       </CurrentUserContext.Provider>
     </div>
   );

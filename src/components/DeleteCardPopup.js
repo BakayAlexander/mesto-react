@@ -15,6 +15,7 @@ function DeleteCardPopup({ onDeleteCard, card, ...props }) {
       onClose={props.onClose}
       isOpen={props.isOpen}
       onSubmit={handleSubmit}
+      isSubmitting={props.isSubmitting}
     ></PopupWithForm>
   );
 }
